@@ -36,7 +36,7 @@ var server = http.createServer(function (request, response) {
   
 })
 
-
-server.listen(process.env.PORT, function(req, res) {
-  console.log('Timestamp microservice')
+server.listen(process.env.PORT || 8080, function() {
+  console.log('Timestamp Microservice');
 })
+
