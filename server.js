@@ -23,7 +23,7 @@ var server = http.createServer(function (request, response) {
 
     if (moment(convertedDate, 'MMMM D, YYYY').isValid()) {
       day = moment(convertedDate, 'MMMM D, YYYY')
-      json.unix = day.valueOf()
+      json.unix = day.unix()
       json.natural = day.format('MMMM D, YYYY')
     } else {
       json.unix = null
