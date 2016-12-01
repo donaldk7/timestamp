@@ -1,25 +1,30 @@
-var http = require('http')
-var url = require('url')
+var express = require('express')
+var app = express()
+var path = require('path')
 var moment = require('moment')
 
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.get('/:userInput', function (req, res) {
+  var inputDate = req.params.userInput
+  var output = formatDate(inputDate)
+  
+  res.send(output)
+})
+
 function isNumber(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+  return !isNaN(parseFloat(n)) && isFinite(n)
 }
 
-var server = http.createServer(function (request, response) {
-  var reqUrl = url.parse(request.url, true)
-  var inputDate = String(reqUrl.pathname) 
-  inputDate = inputDate.substring(1)  // the pathname comes /1432234 so need to take the / away
-  
-  var day = undefined
+function formatDate(inDate) {
   var json = {}
-  
-  if(isNumber(inputDate)) {   // check to see if input is purely number (i.e unix timestamp)
-    day = moment.unix(inputDate)
-    json.unix = inputDate
+  var day = undefined
+  if(isNumber(inDate)) {   // check to see if input is purely number (i.e unix timestamp)
+    day = moment.unix(inDate)
+    json.unix = inDate
     json.natural = day.format('MMMM D, YYYY')
   } else {
-    var convertedDate = inputDate.replace(/%20/g, " ")
+    var convertedDate = inDate.replace(/%20/g, " ")
 
     if (moment(convertedDate, 'MMMM D, YYYY').isValid()) {
       day = moment(convertedDate, 'MMMM D, YYYY')
@@ -31,12 +36,10 @@ var server = http.createServer(function (request, response) {
     }
   }
   
-  response.writeHead(200, { 'Content-Type': 'application/json' })
-  response.end(JSON.stringify(json))
-  
-})
+  return json
+}
 
-server.listen(process.env.PORT || 8080, function() {
+app.listen(process.env.PORT || 8080, function() {
   console.log('Timestamp Microservice');
 })
 
