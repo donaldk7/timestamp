@@ -7,7 +7,7 @@
     "start": "node server.js",
     "test": "node test.js"
   },
-  "author": "",
+  "author": "Don Kim",
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
